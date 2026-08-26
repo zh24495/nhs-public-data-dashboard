@@ -33,10 +33,13 @@ ui <- fluidPage(
     
     sidebarPanel(
       
-      selectInput(
+      selectizeInput(
         inputId = "measure",
-        label = "Select measure",
-        choices = sort(unique(measure_data$measure))
+        label = "Select measure(s)",
+        choices = sort(unique(measure_data$measure)),
+        selected = sort(unique(measure_data$measure))[1],
+        multiple = TRUE,
+        options = list(plugins = list("remove_button"))
       ),
       
       selectInput(
@@ -86,7 +89,7 @@ server <- function(input, output, session) {
       session,
       inputId = "org_name",
       choices = org_choices,
-      selected = org_choices[1],   # start with just the first org selected
+      selected = org_choices[1],
       server = TRUE
     )
     
@@ -94,13 +97,13 @@ server <- function(input, output, session) {
   
   filtered_data <- reactive({
     
-    req(input$org_type, input$org_name)
+    req(input$org_type, input$org_name, input$measure)
     
     measure_data %>%
       filter(
-        measure  == input$measure,
+        measure  %in% input$measure,
         org_type == input$org_type,
-        name %in% input$org_name
+        name     %in% input$org_name
       ) %>%
       arrange(date)
     
@@ -110,19 +113,22 @@ server <- function(input, output, session) {
     
     req(nrow(filtered_data()) > 0)
     
+    plot_data <- filtered_data() %>%
+      mutate(series = paste(name, measure, sep = " - "))
+    
     ggplot(
-      filtered_data(),
-      aes(x = date, y = value, colour = name, group = name)
+      plot_data,
+      aes(x = date, y = value, colour = series, group = series)
     ) +
       geom_line(linewidth = 1) +
       geom_point(size = 2) +
       labs(
-        title = input$measure,
         x = NULL,
         y = "Value",
-        colour = "Organisation"
+        colour = "Series"
       ) +
-      theme_minimal(base_size = 14)
+      theme_minimal(base_size = 14) +
+      theme(legend.position = "bottom")
     
   })
   
