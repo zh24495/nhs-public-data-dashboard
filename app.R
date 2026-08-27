@@ -196,7 +196,7 @@ ui <- fluidPage(
         inputId = "measure",
         label = "Select measure(s)",
         choices = measure_choices,
-        selected = measure_choices[1],
+        selected = "DEMENTIA_REGISTER",
         multiple = TRUE,
         options = list(
           plugins = list("remove_button")
@@ -233,7 +233,7 @@ ui <- fluidPage(
         inputId = "org_type",
         label = "Select organisation type",
         choices = org_type_labels,
-        selected = "ICB"
+        selected = "COUNTRY_RESPONSIBILITY"
       ),
       
       
