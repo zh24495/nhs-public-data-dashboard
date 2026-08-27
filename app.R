@@ -60,105 +60,19 @@ all_measures <- measure_data %>%
   arrange(measure) %>%
   pull(measure)
 
-
-# --------------------------------------------------
-# FRIENDLY MEASURE DISPLAY NAMES
-# --------------------------------------------------
-
-measure_labels <- c(
-  
-  "Age" = "AGE",
-  
-  "Declined Memory Assessment" =
-    "ASS_Declined_GP_Mem_Ass",
-  
-  "Declined Memory Clinic Referral" =
-    "ASS_Declined_GP_Mem_Clinic",
-  
-  "Received GP assessment for dementia" =
-    "ASS_Received_GP",
-  
-  "Received Memory Assessment" =
-    "ASS_Received_GP_Mem_Ass",
-  
-  "Received Memory Clinic Referral" =
-    "ASS_Received_GP_Mem_Clinic",
-  
-  "Received Care Plan" =
-    "DIAG_Recieved_Care_Plan",
-  
-  "Declined Care Plan" =
-    "DIAG_Declined_Care_Plan",
-  
-  "Received Medication Review" =
-    "DIAG_Recieved_Med_Rev",
-  
-  "Comorbidities" =
-    "COMORBIDITIES",
-  
-  "Delirium (12 months)" =
-    "DELIRIUM_12M",
-  
-  "Dementia Estimate (Over 65s)" =
-    "DEMENTIA_ESTIMATE_65_PLUS",
-  
-  "Dementia Register" =
-    "DEMENTIA_REGISTER",
-  
-  "Dementia Register (Under 65)" =
-    "DEMENTIA_REGISTER_0_64",
-  
-  "Dementia Register (Over 65)" =
-    "DEMENTIA_REGISTER_65_PLUS",
-  
-  "Dementia Type" =
-    "DEMENTIA_TYPE",
-  
-  "Diagnosis Rate (Over 65s)" =
-    "DIAG_RATE_65_PLUS",
-  
-  "Diagnosis Rate (Over 65s - Lower limit)" =
-    "DIAG_RATE_65_PLUS_LL",
-  
-  "Diagnosis Rate (Over 65s - Upper limit)" =
-    "DIAG_RATE_65_PLUS_UL",
-  
-  "Ethnicity" =
-    "ETHNICITY",
-  
-  "Incidence" =
-    "INCIDENCE",
-  
-  "Palliative Care" =
-    "PALLIATIVE_CARE",
-  
-  "Patient List Under 65" =
-    "PAT_LIST_0_64",
-  
-  "Patient List Over 65" =
-    "PAT_LIST_65_PLUS",
-  
-  "Patient List" =
-    "PAT_LIST_ALL",
-  
-  "Residential Type" =
-    "RES_TYPE",
-  
-  "Sex" =
-    "SEX",
-  
-  "Young Onset" =
-    "YOUNG_ONSET"
+#Load measure info for labels and descriptions
+measure_info <- read_csv(
+  here::here(
+    "data",
+    "measure_info.csv"
+  )
 )
-
-
-# --------------------------------------------------
-# ONLY SHOW LABELS FOR MEASURES THAT EXIST IN DATA
-# --------------------------------------------------
-
-measure_choices <- measure_labels[
-  measure_labels %in% all_measures
-]
+# Only include measures in the measures table
+measure_choices <- measure_info %>%
+  filter(measure %in% all_measures) %>%
+  arrange(display_name) %>%
+  select(display_name, measure) %>%
+  deframe()
 
 
 # --------------------------------------------------
@@ -448,24 +362,33 @@ server <- function(input, output, session) {
     # ----------------------------------------------
     
     plot_data <- df %>%
+      left_join(
+        measure_info %>%
+          select(measure, display_name, description),
+        by = "measure"
+      ) %>%
       mutate(
         
-        # Use measure alone for ordinary measures
-        # and measure + submeasure for submeasures
+        # Use display name instead of variable name
+        measure_display = coalesce(
+          display_name,
+          measure
+        ),
+        
+        # Use measure + submeasure for submeasures
         series = case_when(
           
           !is.na(submeasure) ~
             paste(
-              measure,
+              measure_display,
               submeasure,
               sep = " - "
             ),
           
           TRUE ~
-            measure
+            measure_display
           
         ),
-        
         
         # Include organisation in series name
         series = paste(
@@ -474,7 +397,6 @@ server <- function(input, output, session) {
           sep = " - "
         ),
         
-        
         # Information displayed when hovering
         hover_text = paste0(
           
@@ -482,7 +404,7 @@ server <- function(input, output, session) {
           name,
           
           "<br><b>Measure:</b> ",
-          measure,
+          measure_display,
           
           ifelse(
             !is.na(submeasure),
@@ -492,6 +414,9 @@ server <- function(input, output, session) {
             ),
             ""
           ),
+          
+          "<br><b>Description:</b> ",
+          description,
           
           "<br><b>Date:</b> ",
           format(
