@@ -45,6 +45,8 @@ dir_create(here::here(database_dir))
 #Load geography data
 geography_dim <- read_csv(here("data", "gp-reg-pat-prac-map-03-2026.csv"))
 
+
+##Start loading data for measures_fact (main table)
 #Find data files for rate
 rate_files <- list.files(
   here("data", "measures"),
@@ -64,7 +66,8 @@ dem_rate <- read_csv(
     org_type=ORG_TYPE,
     date=ACH_DATE,
     measure = MEASURE,
-    value=VALUE))
+    value=VALUE)) %>%
+  mutate(submeasure = "")
 
 
 #Find data for COMORBIDITIES
@@ -86,7 +89,8 @@ comor_rate <- read_csv(
     date=ACH_DATE,
     measure = Measure,
     value=Value)) %>%
-  filter(measure !="DEMENTIA_REGISTER_65_PLUS")
+  filter(measure !="DEMENTIA_REGISTER_65_PLUS") %>%
+  mutate(submeasure = "")
 
 
 #combine these
@@ -123,10 +127,52 @@ wide_data <- Map(
 
 all_orgs <- wide_data %>%
   lapply(\(x) janitor::clean_names(x)) %>%
-  bind_rows()
+  bind_rows()%>%
+  mutate(submeasure = "")
 measure_fact <- bind_rows(
   janitor::clean_names(measure_fact),
   all_orgs
+)
+
+
+## Add ethnicity measures
+ethnicity <- read_csv(
+  here("data", "measures", "pcdem-sicbl-ethnicity-mar-2026.csv"))
+
+
+grouped_data <- lapply(
+  org_config,
+  function(x) {
+    group_to_level(
+      ethnicity,
+      x$levels
+    )
+  }
+)
+
+wide_data <- Map(
+  function(data, config) {
+    make_wide(
+      data,
+      config$type,
+      config$code,
+      config$name
+    )
+  },
+  grouped_data,
+  org_config
+)
+
+all_orgs <- wide_data %>%
+  lapply(\(x) janitor::clean_names(x)) %>%
+  bind_rows() %>%
+  mutate(submeasure = measure) %>%
+  mutate(measure = "ETHNICITY")
+
+
+measure_fact <- bind_rows(
+  janitor::clean_names(measure_fact),
+  janitor::clean_names(all_orgs)
 )
 
 # --------------------------------------------------

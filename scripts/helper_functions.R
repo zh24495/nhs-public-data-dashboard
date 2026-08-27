@@ -7,7 +7,7 @@ library(fs)
 group_to_level <- function(dataset, levels = character(0)) {
   dataset <- dataset %>%
     mutate(
-      Value = as.numeric(na_if(Value, "."))
+      Value = as.numeric(ifelse(Value == ".", NA, Value))
     ) %>%
     group_by(across(all_of(levels)), ACH_DATE, Measure) %>%
     summarise(
