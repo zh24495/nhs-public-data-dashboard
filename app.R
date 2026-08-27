@@ -60,6 +60,20 @@ all_measures <- measure_data %>%
   arrange(measure) %>%
   pull(measure)
 
+#Load measure info for labels and descriptions
+measure_info <- read_csv(
+  here::here(
+    "data",
+    "measure_info.csv"
+  )
+)
+# Only include measures in the measures table
+measure_choices <- measure_info %>%
+  filter(measure %in% all_measures) %>%
+  arrange(display_name) %>%
+  select(display_name, measure) %>%
+  deframe()
+
 
 # --------------------------------------------------
 # GET DATE RANGE
@@ -95,8 +109,8 @@ ui <- fluidPage(
       selectizeInput(
         inputId = "measure",
         label = "Select measure(s)",
-        choices = all_measures,
-        selected = all_measures[1],
+        choices = measure_choices,
+        selected = "DEMENTIA_REGISTER",
         multiple = TRUE,
         options = list(
           plugins = list("remove_button")
@@ -133,7 +147,7 @@ ui <- fluidPage(
         inputId = "org_type",
         label = "Select organisation type",
         choices = org_type_labels,
-        selected = "ICB"
+        selected = "COUNTRY_RESPONSIBILITY"
       ),
       
       
@@ -348,24 +362,33 @@ server <- function(input, output, session) {
     # ----------------------------------------------
     
     plot_data <- df %>%
+      left_join(
+        measure_info %>%
+          select(measure, display_name, description),
+        by = "measure"
+      ) %>%
       mutate(
         
-        # Use measure alone for ordinary measures
-        # and measure + submeasure for submeasures
+        # Use display name instead of variable name
+        measure_display = coalesce(
+          display_name,
+          measure
+        ),
+        
+        # Use measure + submeasure for submeasures
         series = case_when(
           
           !is.na(submeasure) ~
             paste(
-              measure,
+              measure_display,
               submeasure,
               sep = " - "
             ),
           
           TRUE ~
-            measure
+            measure_display
           
         ),
-        
         
         # Include organisation in series name
         series = paste(
@@ -374,7 +397,6 @@ server <- function(input, output, session) {
           sep = " - "
         ),
         
-        
         # Information displayed when hovering
         hover_text = paste0(
           
@@ -382,7 +404,7 @@ server <- function(input, output, session) {
           name,
           
           "<br><b>Measure:</b> ",
-          measure,
+          measure_display,
           
           ifelse(
             !is.na(submeasure),
@@ -392,6 +414,9 @@ server <- function(input, output, session) {
             ),
             ""
           ),
+          
+          "<br><b>Description:</b> ",
+          description,
           
           "<br><b>Date:</b> ",
           format(
