@@ -3,22 +3,31 @@ library(tidyverse)
 library(here)
 library(lubridate)
 library(colourpicker)
+library(plotly)
 
 # --------------------------------------------------
 # LOAD DATA
 # --------------------------------------------------
 
 measure_fact <- readRDS(
-  here::here("data", "database_files", "measure_fact.rds")
+  here::here(
+    "data",
+    "database_files",
+    "measure_fact.rds"
+  )
 )
 
 geography_dim <- readRDS(
-  here::here("data", "database_files", "geography_dim.rds")
+  here::here(
+    "data",
+    "database_files",
+    "geography_dim.rds"
+  )
 )
 
 
 # --------------------------------------------------
-# PREPARE DATA
+# SMALL AMOUNT OF DATA PREP
 # --------------------------------------------------
 
 measure_data <- measure_fact %>%
@@ -31,7 +40,7 @@ measure_data <- measure_fact %>%
 
 
 # --------------------------------------------------
-# FRIENDLY LABELS FOR ORG TYPE
+# LABELS FOR ORG TYPE
 # --------------------------------------------------
 
 org_type_labels <- c(
@@ -43,7 +52,7 @@ org_type_labels <- c(
 
 
 # --------------------------------------------------
-# MEASURES
+# GET MEASURES LIST
 # --------------------------------------------------
 
 all_measures <- measure_data %>%
@@ -53,18 +62,36 @@ all_measures <- measure_data %>%
 
 
 # --------------------------------------------------
+# GET DATE RANGE
+# --------------------------------------------------
+
+min_date <- min(
+  measure_data$date,
+  na.rm = TRUE
+)
+
+max_date <- max(
+  measure_data$date,
+  na.rm = TRUE
+)
+
+
+# --------------------------------------------------
 # UI
 # --------------------------------------------------
 
 ui <- fluidPage(
   
-  titlePanel("Primary Care Measures"),
+  titlePanel("NHS Dementia Care Measures"),
   
   sidebarLayout(
     
     sidebarPanel(
       
-      # Measure
+      # --------------------------------------------
+      # MEASURE
+      # --------------------------------------------
+      
       selectizeInput(
         inputId = "measure",
         label = "Select measure(s)",
@@ -76,8 +103,13 @@ ui <- fluidPage(
         )
       ),
       
-      # Submeasure
+      
+      # --------------------------------------------
+      # SUBMEASURE
+      # --------------------------------------------
+      
       conditionalPanel(
+        
         condition = "output.has_submeasures",
         
         selectizeInput(
@@ -92,7 +124,11 @@ ui <- fluidPage(
         
       ),
       
-      # Organisation type
+      
+      # --------------------------------------------
+      # ORGANISATION TYPE
+      # --------------------------------------------
+      
       selectInput(
         inputId = "org_type",
         label = "Select organisation type",
@@ -100,7 +136,11 @@ ui <- fluidPage(
         selected = "ICB"
       ),
       
-      # Organisation
+      
+      # --------------------------------------------
+      # ORGANISATION
+      # --------------------------------------------
+      
       selectizeInput(
         inputId = "org_name",
         label = "Select organisation(s)",
@@ -109,13 +149,34 @@ ui <- fluidPage(
         options = list(
           plugins = list("remove_button")
         )
+      ),
+      
+      
+      # --------------------------------------------
+      # DATE RANGE
+      # --------------------------------------------
+      
+      dateRangeInput(
+        inputId = "date_range",
+        label = "Select date range",
+        start = min_date,
+        end = max_date,
+        min = min_date,
+        max = max_date,
+        format = "dd-M-yyyy",
+        separator = " to "
       )
       
     ),
     
+    
+    # ----------------------------------------------
+    # MAIN PANEL
+    # ----------------------------------------------
+    
     mainPanel(
       
-      plotOutput(
+      plotlyOutput(
         outputId = "time_plot",
         height = "600px"
       )
@@ -155,6 +216,7 @@ server <- function(input, output, session) {
   output$has_submeasures <- reactive({
     has_submeasures()
   })
+  
   
   outputOptions(
     output,
@@ -229,19 +291,26 @@ server <- function(input, output, session) {
     req(
       input$org_type,
       input$org_name,
-      input$measure
+      input$measure,
+      input$date_range
     )
     
     
+    # Filter by measure, organisation and date
     data <- measure_data %>%
       filter(
         measure %in% input$measure,
         org_type == input$org_type,
-        name %in% input$org_name
+        name %in% input$org_name,
+        date >= input$date_range[1],
+        date <= input$date_range[2]
       )
     
     
-    # If submeasures have been selected, filter to them
+    # ----------------------------------------------
+    # FILTER SUBMEASURES
+    # ----------------------------------------------
+    
     if (
       has_submeasures() &&
       !is.null(input$submeasure) &&
@@ -267,12 +336,16 @@ server <- function(input, output, session) {
   # PLOT
   # ------------------------------------------------
   
-  output$time_plot <- renderPlot({
+  output$time_plot <- renderPlotly({
     
     df <- filtered_data()
     
     req(nrow(df) > 0)
     
+    
+    # ----------------------------------------------
+    # CREATE SERIES AND HOVER INFORMATION
+    # ----------------------------------------------
     
     plot_data <- df %>%
       mutate(
@@ -282,30 +355,73 @@ server <- function(input, output, session) {
         series = case_when(
           
           !is.na(submeasure) ~
-            paste(measure, submeasure, sep = " - "),
+            paste(
+              measure,
+              submeasure,
+              sep = " - "
+            ),
           
           TRUE ~
             measure
           
         ),
         
+        
         # Include organisation in series name
         series = paste(
           name,
           series,
           sep = " - "
+        ),
+        
+        
+        # Information displayed when hovering
+        hover_text = paste0(
+          
+          "<b>Organisation:</b> ",
+          name,
+          
+          "<br><b>Measure:</b> ",
+          measure,
+          
+          ifelse(
+            !is.na(submeasure),
+            paste0(
+              "<br><b>Submeasure:</b> ",
+              submeasure
+            ),
+            ""
+          ),
+          
+          "<br><b>Date:</b> ",
+          format(
+            date,
+            "%d %b %Y"
+          ),
+          
+          "<br><b>Value:</b> ",
+          format(
+            value,
+            big.mark = ","
+          )
+          
         )
         
       )
     
     
-    ggplot(
+    # ----------------------------------------------
+    # CREATE GGPLOT
+    # ----------------------------------------------
+    
+    p <- ggplot(
       plot_data,
       aes(
         x = date,
         y = value,
         colour = series,
-        group = series
+        group = series,
+        text = hover_text
       )
     ) +
       
@@ -331,9 +447,20 @@ server <- function(input, output, session) {
         legend.position = "bottom"
       )
     
+    
+    # ----------------------------------------------
+    # CONVERT TO INTERACTIVE PLOT
+    # ----------------------------------------------
+    
+    ggplotly(
+      p,
+      tooltip = "text"
+    )
+    
   })
   
 }
+
 
 # --------------------------------------------------
 # RUN APP
