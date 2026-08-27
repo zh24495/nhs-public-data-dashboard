@@ -690,6 +690,32 @@
         "Built": "R 4.4.1; ; 2024-10-17 01:18:30 UTC; windows"
       }
     },
+    "crosstalk": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "crosstalk",
+        "Type": "Package",
+        "Title": "Inter-Widget Interactivity for HTML Widgets",
+        "Version": "1.2.1",
+        "Authors@R": "c(\n    person(\"Joe\", \"Cheng\", role = \"aut\", email = \"joe@posit.co\"),\n    person(\"Carson\", \"Sievert\", role = c(\"aut\", \"cre\"),\n    email = \"carson@posit.co\", comment = c(ORCID = \"0000-0002-4958-2844\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")),\n    person(family = \"jQuery Foundation\", role = \"cph\",\n    comment = \"jQuery library and jQuery UI library\"),\n    person(family = \"jQuery contributors\", role = c(\"ctb\", \"cph\"),\n    comment = \"jQuery library; authors listed in inst/www/shared/jquery-AUTHORS.txt\"),\n    person(\"Mark\", \"Otto\", role = \"ctb\",\n    comment = \"Bootstrap library\"),\n    person(\"Jacob\", \"Thornton\", role = \"ctb\",\n    comment = \"Bootstrap library\"),\n    person(family = \"Bootstrap contributors\", role = \"ctb\",\n    comment = \"Bootstrap library\"),\n    person(family = \"Twitter, Inc\", role = \"cph\",\n    comment = \"Bootstrap library\"),\n    person(\"Brian\", \"Reavis\", role = c(\"ctb\", \"cph\"),\n    comment = \"selectize.js library\"),\n    person(\"Kristopher Michael\", \"Kowal\", role = c(\"ctb\", \"cph\"),\n    comment = \"es5-shim library\"),\n    person(family = \"es5-shim contributors\", role = c(\"ctb\", \"cph\"),\n    comment = \"es5-shim library\"),\n    person(\"Denis\", \"Ineshin\", role = c(\"ctb\", \"cph\"),\n    comment = \"ion.rangeSlider library\"),\n    person(\"Sami\", \"Samhuri\", role = c(\"ctb\", \"cph\"),\n    comment = \"Javascript strftime library\")\n    )",
+        "Description": "Provides building blocks for allowing HTML widgets to communicate\n    with each other, with Shiny or without (i.e. static .html files). Currently\n    supports linked brushing and filtering.",
+        "License": "MIT + file LICENSE",
+        "Imports": "htmltools (>= 0.3.6), jsonlite, lazyeval, R6",
+        "Suggests": "shiny, ggplot2, testthat (>= 2.1.0), sass, bslib",
+        "URL": "https://rstudio.github.io/crosstalk/,\nhttps://github.com/rstudio/crosstalk",
+        "BugReports": "https://github.com/rstudio/crosstalk/issues",
+        "RoxygenNote": "7.2.3",
+        "Encoding": "UTF-8",
+        "NeedsCompilation": "no",
+        "Packaged": "2023-11-22 16:29:50 UTC; cpsievert",
+        "Author": "Joe Cheng [aut],\n  Carson Sievert [aut, cre] (<https://orcid.org/0000-0002-4958-2844>),\n  Posit Software, PBC [cph, fnd],\n  jQuery Foundation [cph] (jQuery library and jQuery UI library),\n  jQuery contributors [ctb, cph] (jQuery library; authors listed in\n    inst/www/shared/jquery-AUTHORS.txt),\n  Mark Otto [ctb] (Bootstrap library),\n  Jacob Thornton [ctb] (Bootstrap library),\n  Bootstrap contributors [ctb] (Bootstrap library),\n  Twitter, Inc [cph] (Bootstrap library),\n  Brian Reavis [ctb, cph] (selectize.js library),\n  Kristopher Michael Kowal [ctb, cph] (es5-shim library),\n  es5-shim contributors [ctb, cph] (es5-shim library),\n  Denis Ineshin [ctb, cph] (ion.rangeSlider library),\n  Sami Samhuri [ctb, cph] (Javascript strftime library)",
+        "Maintainer": "Carson Sievert <carson@posit.co>",
+        "Repository": "CRAN",
+        "Date/Publication": "2023-11-23 08:50:07 UTC",
+        "Built": "R 4.4.3; ; 2025-04-04 01:47:26 UTC; windows"
+      }
+    },
     "curl": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",
@@ -1576,6 +1602,34 @@
         "Archs": "x64"
       }
     },
+    "janitor": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "janitor",
+        "Title": "Simple Tools for Examining and Cleaning Dirty Data",
+        "Version": "2.2.1",
+        "Authors@R": "c(person(\"Sam\", \"Firke\", email = \"samuel.firke@gmail.com\", role = c(\"aut\", \"cre\")),\n    person(\"Bill\", \"Denney\", email = \"wdenney@humanpredictions.com\", role = \"ctb\"),\n    person(\"Chris\", \"Haid\", email = \"chrishaid@gmail.com\", role = \"ctb\"),\n    person(\"Ryan\", \"Knight\", email = \"ryangknight@gmail.com\", role = \"ctb\"),\n    person(\"Malte\", \"Grosser\", email = \"malte.grosser@gmail.com\", role = \"ctb\"),\n    person(\"Jonathan\", \"Zadra\", email = \"jonathan.zadra@sorensonimpact.com\", role = \"ctb\"))",
+        "Description": "The main janitor functions can: perfectly format data.frame column\n    names; provide quick counts of variable combinations (i.e., frequency\n    tables and crosstabs); and explore duplicate records. Other janitor functions\n    nicely format the tabulation results. These tabulate-and-report functions\n    approximate popular features of SPSS and Microsoft Excel. This package\n    follows the principles of the \"tidyverse\" and works well with the pipe function\n    %>%. janitor was built with beginning-to-intermediate R users in mind and is\n    optimized for user-friendliness.",
+        "URL": "https://github.com/sfirke/janitor,\nhttps://sfirke.github.io/janitor/",
+        "BugReports": "https://github.com/sfirke/janitor/issues",
+        "Depends": "R (>= 3.1.2)",
+        "Imports": "dplyr (>= 1.0.0), hms, lifecycle, lubridate, magrittr, purrr,\nrlang, stringi, stringr, snakecase (>= 0.9.2), tidyselect (>=\n1.0.0), tidyr (>= 0.7.0)",
+        "License": "MIT + file LICENSE",
+        "RoxygenNote": "7.2.3",
+        "Suggests": "dbplyr, knitr, rmarkdown, RSQLite, sf, testthat (>= 3.0.0),\ntibble, tidygraph",
+        "VignetteBuilder": "knitr",
+        "Encoding": "UTF-8",
+        "Config/testthat/edition": "3",
+        "NeedsCompilation": "no",
+        "Packaged": "2024-12-22 15:53:13 UTC; sam",
+        "Author": "Sam Firke [aut, cre],\n  Bill Denney [ctb],\n  Chris Haid [ctb],\n  Ryan Knight [ctb],\n  Malte Grosser [ctb],\n  Jonathan Zadra [ctb]",
+        "Maintainer": "Sam Firke <samuel.firke@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-12-22 16:30:01 UTC",
+        "Built": "R 4.4.3; ; 2025-12-08 04:57:32 UTC; windows"
+      }
+    },
     "jquerylib": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",
@@ -1735,6 +1789,31 @@
         "Repository": "CRAN",
         "Date/Publication": "2024-03-20 06:10:02 UTC",
         "Built": "R 4.4.1; x86_64-w64-mingw32; 2024-06-14 08:26:06 UTC; windows",
+        "Archs": "x64"
+      }
+    },
+    "lazyeval": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "lazyeval",
+        "Version": "0.2.2",
+        "Title": "Lazy (Non-Standard) Evaluation",
+        "Description": "An alternative approach to non-standard evaluation using\n    formulas. Provides a full implementation of LISP style 'quasiquotation',\n    making it easier to generate code with other code.",
+        "Authors@R": "c(\n    person(\"Hadley\", \"Wickham\", ,\"hadley@rstudio.com\", c(\"aut\", \"cre\")),\n    person(\"RStudio\", role = \"cph\")\n    )",
+        "License": "GPL-3",
+        "LazyData": "true",
+        "Depends": "R (>= 3.1.0)",
+        "Suggests": "knitr, rmarkdown (>= 0.2.65), testthat, covr",
+        "VignetteBuilder": "knitr",
+        "RoxygenNote": "6.1.1",
+        "NeedsCompilation": "yes",
+        "Packaged": "2019-03-15 14:18:01 UTC; lionel",
+        "Author": "Hadley Wickham [aut, cre],\n  RStudio [cph]",
+        "Maintainer": "Hadley Wickham <hadley@rstudio.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2019-03-15 17:50:07 UTC",
+        "Built": "R 4.4.3; x86_64-w64-mingw32; 2025-04-04 00:39:00 UTC; windows",
         "Archs": "x64"
       }
     },
@@ -2077,6 +2156,34 @@
         "Repository": "CRAN",
         "Date/Publication": "2019-09-22 09:20:02 UTC",
         "Built": "R 4.4.1; ; 2024-10-17 01:18:28 UTC; windows"
+      }
+    },
+    "plotly": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "plotly",
+        "Title": "Create Interactive Web Graphics via 'plotly.js'",
+        "Version": "4.12.0",
+        "Authors@R": "c(person(\"Carson\", \"Sievert\", role = c(\"aut\", \"cre\"),\n    email = \"cpsievert1@gmail.com\", comment = c(ORCID = \"0000-0002-4958-2844\")),\n    person(\"Chris\", \"Parmer\", role = \"aut\",\n    email = \"chris@plot.ly\"),\n    person(\"Toby\", \"Hocking\", role = \"aut\",\n    email = \"tdhock5@gmail.com\"),\n    person(\"Scott\", \"Chamberlain\", role = \"aut\",\n    email = \"myrmecocystus@gmail.com\"),\n    person(\"Karthik\", \"Ram\", role = \"aut\",\n    email = \"karthik.ram@gmail.com\"),\n    person(\"Marianne\", \"Corvellec\", role = \"aut\",\n    email = \"marianne.corvellec@igdore.org\", comment = c(ORCID = \"0000-0002-1994-3581\")),\n    person(\"Pedro\", \"Despouy\", role = \"aut\",\n    email = \"pedro@plot.ly\"),\n    person(\"Salim\", \"Brüggemann\", role = \"ctb\",\n    email = \"salim-b@pm.me\", comment = c(ORCID = \"0000-0002-5329-5987\")),\n    person(\"Plotly Technologies Inc.\", role = \"cph\"))",
+        "License": "MIT + file LICENSE",
+        "Description": "Create interactive web graphics from 'ggplot2' graphs and/or a custom interface to the (MIT-licensed) JavaScript library 'plotly.js' inspired by the grammar of graphics.",
+        "URL": "https://plotly-r.com, https://github.com/plotly/plotly.R,\nhttps://plotly.com/r/",
+        "BugReports": "https://github.com/plotly/plotly.R/issues",
+        "Depends": "R (>= 3.5.0), ggplot2 (>= 3.0.0)",
+        "Imports": "tools, scales, httr (>= 1.3.0), jsonlite (>= 1.6), magrittr,\ndigest, viridisLite, base64enc, htmltools (>= 0.3.6),\nhtmlwidgets (>= 1.5.2.9001), tidyr (>= 1.0.0), RColorBrewer,\ndplyr, vctrs, tibble, lazyeval (>= 0.2.0), rlang (>= 1.0.0),\ncrosstalk, purrr, data.table, promises",
+        "Suggests": "MASS, maps, hexbin, ggthemes, GGally, ggalluvial, testthat,\nknitr, shiny (>= 1.1.0), shinytest2, curl, rmarkdown, Cairo,\nbroom, webshot, listviewer, dendextend, sf, png, IRdisplay,\nprocessx, plotlyGeoAssets, forcats, withr, palmerpenguins,\nrversions, reticulate, rsvg, ggridges",
+        "LazyData": "true",
+        "RoxygenNote": "7.3.3",
+        "Encoding": "UTF-8",
+        "Config/Needs/check": "tidyverse/ggplot2, ggobi/GGally, rcmdcheck,\ndevtools, reshape2, s2",
+        "NeedsCompilation": "no",
+        "Packaged": "2026-01-24 00:53:27 UTC; cpsievert",
+        "Author": "Carson Sievert [aut, cre] (ORCID:\n    <https://orcid.org/0000-0002-4958-2844>),\n  Chris Parmer [aut],\n  Toby Hocking [aut],\n  Scott Chamberlain [aut],\n  Karthik Ram [aut],\n  Marianne Corvellec [aut] (ORCID:\n    <https://orcid.org/0000-0002-1994-3581>),\n  Pedro Despouy [aut],\n  Salim Brüggemann [ctb] (ORCID: <https://orcid.org/0000-0002-5329-5987>),\n  Plotly Technologies Inc. [cph]",
+        "Maintainer": "Carson Sievert <cpsievert1@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2026-01-24 07:50:02 UTC",
+        "Built": "R 4.4.3; ; 2026-04-22 04:04:34 UTC; windows"
       }
     },
     "prettyunits": {
@@ -2756,6 +2863,34 @@
         "Built": "R 4.4.3; ; 2025-12-29 18:50:43 UTC; windows"
       }
     },
+    "snakecase": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "snakecase",
+        "Version": "0.11.1",
+        "Date": "2023-08-27",
+        "Title": "Convert Strings into any Case",
+        "Description": "A consistent, flexible and easy to use tool to parse and convert strings into cases like snake or camel among others.",
+        "Authors@R": "c(\n    person(\"Malte\", \"Grosser\", , \"malte.grosser@gmail.com\", role = c(\"aut\", \"cre\")))",
+        "Maintainer": "Malte Grosser <malte.grosser@gmail.com>",
+        "Depends": "R (>= 3.2)",
+        "Imports": "stringr, stringi",
+        "Suggests": "testthat, covr, tibble, purrrlyr, knitr, rmarkdown, magrittr",
+        "URL": "https://github.com/Tazinho/snakecase",
+        "BugReports": "https://github.com/Tazinho/snakecase/issues",
+        "Encoding": "UTF-8",
+        "License": "GPL-3",
+        "RoxygenNote": "6.1.1",
+        "VignetteBuilder": "knitr",
+        "NeedsCompilation": "no",
+        "Packaged": "2023-08-27 20:30:20 UTC; malte",
+        "Author": "Malte Grosser [aut, cre]",
+        "Repository": "CRAN",
+        "Date/Publication": "2023-08-27 22:50:09 UTC",
+        "Built": "R 4.4.3; ; 2025-12-08 03:49:10 UTC; windows"
+      }
+    },
     "sourcetools": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",
@@ -3425,8 +3560,14 @@
     }
   },
   "files": {
+    "app.R": {
+      "checksum": "cd793c23542e81b5bdab4e1e5399ceb0"
+    },
+    "data/database_files/geography_dim.rds": {
+      "checksum": "2f72712b4969e5cd6b8c9f113ba7938c"
+    },
     "data/database_files/measure_fact.rds": {
-      "checksum": "f18a968a70a40141ed5173430f82826c"
+      "checksum": "a67b59886ca8461848fc7d347ef3699e"
     },
     "data/database_files/practice_dim.rds": {
       "checksum": "2f72712b4969e5cd6b8c9f113ba7938c"
@@ -3434,17 +3575,14 @@
     "data/gp-reg-pat-prac-map-03-2026.csv": {
       "checksum": "d3eb1a16f442eac722a618287b135885"
     },
-    "data/measures/pcdem-nhs-rate-mar-2026.csv": {
-      "checksum": "ed22cb4788712a9f6a131a37d6f5a9ed"
-    },
     "README.md": {
       "checksum": "68d3403d4c93e9473c72f667719e4f91"
     },
-    "scripts/app.R": {
-      "checksum": "253d55ddbdf09585b05d3dd6d1b59ea8"
+    "scripts/helper_functions.R": {
+      "checksum": "94cdc84ada4972ef33a9e2abdb5c9747"
     },
     "scripts/load_data.R": {
-      "checksum": "404bf02a4e1e1a59d8e0506488a3d87f"
+      "checksum": "a36097059a44699f046badc28bfa49c2"
     }
   },
   "users": null
