@@ -96,6 +96,38 @@ comor_rate <- read_csv(
 #combine these
 measure_fact <- bind_rows(dem_rate, comor_rate)
 
+#young onset / incidence / delirium
+young_data <- read_csv(
+  here("data", "measures", "pcdem-sicbl-incidence-onset-delirium-mar-2026.csv"),
+  col_select = c(
+    name=NAME,
+    org_code=ORG_CODE,
+    org_type=ORG_TYPE,
+    date=ACH_DATE,
+    measure = Measure,
+    value=Value)) %>%
+  mutate(submeasure = "")
+
+measure_fact <- bind_rows(measure_fact, young_data)
+
+# #Cognitive impairment
+# cog_imp <- read_csv(
+#   here("data", "measures", "pcdem_sicbl-cog-imp-mar-2026.csv"),
+#   col_select = c(
+#     name = NAME,
+#     org_code = ORG_CODE,
+#     org_type = ORG_TYPE,
+#     date = ACH_DATE,
+#     measure = Measure,
+#     value = Value
+#   )
+# ) %>%
+#   mutate(
+#     value = as.numeric(na_if(value, ".")),
+#     submeasure = ""
+#   )
+# 
+# measure_fact <- bind_rows(measure_fact, cog_imp)
 
 ##Adding some new measures that came in a spreadsheet with different format
 #Load file
@@ -174,6 +206,178 @@ measure_fact <- bind_rows(
   janitor::clean_names(measure_fact),
   janitor::clean_names(all_orgs)
 )
+
+##Add dementia type submeasures
+dem_type <- read_csv(
+  here("data", "measures", "pcdem-sicbl-dem-type-mar-2026.csv"))
+
+
+grouped_data <- lapply(
+  org_config,
+  function(x) {
+    group_to_level(
+      dem_type,
+      x$levels
+    )
+  }
+)
+
+wide_data <- Map(
+  function(data, config) {
+    make_wide(
+      data,
+      config$type,
+      config$code,
+      config$name
+    )
+  },
+  grouped_data,
+  org_config
+)
+
+all_orgs <- wide_data %>%
+  lapply(\(x) janitor::clean_names(x)) %>%
+  bind_rows() %>%
+  mutate(submeasure = measure) %>%
+  mutate(measure = "DEMENTIA_TYPE")
+
+
+measure_fact <- bind_rows(
+  janitor::clean_names(measure_fact),
+  janitor::clean_names(all_orgs)
+)
+
+## Residential Type
+res_type <- read_csv(
+  here("data", "measures", "pcdem-sicbl-res-type-mar-2026.csv"))
+
+
+grouped_data <- lapply(
+  org_config,
+  function(x) {
+    group_to_level(
+      res_type,
+      x$levels
+    )
+  }
+)
+
+wide_data <- Map(
+  function(data, config) {
+    make_wide(
+      data,
+      config$type,
+      config$code,
+      config$name
+    )
+  },
+  grouped_data,
+  org_config
+)
+
+all_orgs <- wide_data %>%
+  lapply(\(x) janitor::clean_names(x)) %>%
+  bind_rows() %>%
+  mutate(submeasure = measure) %>%
+  mutate(measure = "RES_TYPE")
+
+
+measure_fact <- bind_rows(
+  janitor::clean_names(measure_fact),
+  janitor::clean_names(all_orgs)
+)
+
+##Add age
+age_data <- read_csv(
+  here("data", "measures", "pcdem-sicbl-age-sex-mar-2026.csv")) %>%
+  filter(str_starts(Measure, "ALL_AGED_"))
+
+grouped_data <- lapply(
+  org_config,
+  function(x) {
+    group_to_level(
+      age_data,
+      x$levels
+    )
+  }
+)
+
+wide_data <- Map(
+  function(data, config) {
+    make_wide(
+      data,
+      config$type,
+      config$code,
+      config$name
+    )
+  },
+  grouped_data,
+  org_config
+)
+
+all_orgs <- wide_data %>%
+  lapply(\(x) janitor::clean_names(x)) %>%
+  bind_rows() %>%
+  mutate(submeasure = measure) %>%
+  mutate(measure = "AGE")
+
+
+measure_fact <- bind_rows(
+  janitor::clean_names(measure_fact),
+  janitor::clean_names(all_orgs)
+)
+
+##Add sex
+sex_data <- read_csv(
+  here("data", "measures", "pcdem-sicbl-age-sex-mar-2026.csv")) %>%
+  filter(str_detect(Measure, "^(FEMALE|MALE)_AGED_")) %>%
+  mutate(Measure = case_when(
+    str_starts(Measure, "FEMALE_") ~ "FEMALE",
+    str_starts(Measure, "MALE_") ~ "MALE"
+  )) %>% group_by(
+    across(-Value)
+  ) %>%
+  summarise(
+    Value=sum(Value,na.rm=TRUE),
+    .groups = "drop"
+  )
+
+grouped_data <- lapply(
+  org_config,
+  function(x) {
+    group_to_level(
+      sex_data,
+      x$levels
+    )
+  }
+)
+
+wide_data <- Map(
+  function(data, config) {
+    make_wide(
+      data,
+      config$type,
+      config$code,
+      config$name
+    )
+  },
+  grouped_data,
+  org_config
+)
+
+all_orgs <- wide_data %>%
+  lapply(\(x) janitor::clean_names(x)) %>%
+  bind_rows()  %>%
+  mutate(submeasure = measure) %>%
+  mutate(measure = "SEX")
+
+
+measure_fact <- bind_rows(
+  janitor::clean_names(measure_fact),
+  janitor::clean_names(all_orgs)
+)
+
+
 
 # --------------------------------------------------
 # STANDARDISE org_type LABELS
