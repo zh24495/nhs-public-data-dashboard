@@ -3,6 +3,7 @@ library(tidyverse)
 library(here)
 library(lubridate)
 library(colourpicker)
+library(plotly)
 
 # --------------------------------------------------
 # LOAD DATA
@@ -64,9 +65,15 @@ all_measures <- measure_data %>%
 # GET DATE RANGE
 # --------------------------------------------------
 
-min_date <- min(measure_data$date, na.rm = TRUE)
+min_date <- min(
+  measure_data$date,
+  na.rm = TRUE
+)
 
-max_date <- max(measure_data$date, na.rm = TRUE)
+max_date <- max(
+  measure_data$date,
+  na.rm = TRUE
+)
 
 
 # --------------------------------------------------
@@ -169,7 +176,7 @@ ui <- fluidPage(
     
     mainPanel(
       
-      plotOutput(
+      plotlyOutput(
         outputId = "time_plot",
         height = "600px"
       )
@@ -329,15 +336,16 @@ server <- function(input, output, session) {
   # PLOT
   # ------------------------------------------------
   
-  output$time_plot <- renderPlot({
+  output$time_plot <- renderPlotly({
     
     df <- filtered_data()
     
     req(nrow(df) > 0)
     
     
-    # Create a unique series for each
-    # organisation / measure / submeasure combination
+    # ----------------------------------------------
+    # CREATE SERIES AND HOVER INFORMATION
+    # ----------------------------------------------
     
     plot_data <- df %>%
       mutate(
@@ -364,22 +372,56 @@ server <- function(input, output, session) {
           name,
           series,
           sep = " - "
+        ),
+        
+        
+        # Information displayed when hovering
+        hover_text = paste0(
+          
+          "<b>Organisation:</b> ",
+          name,
+          
+          "<br><b>Measure:</b> ",
+          measure,
+          
+          ifelse(
+            !is.na(submeasure),
+            paste0(
+              "<br><b>Submeasure:</b> ",
+              submeasure
+            ),
+            ""
+          ),
+          
+          "<br><b>Date:</b> ",
+          format(
+            date,
+            "%d %b %Y"
+          ),
+          
+          "<br><b>Value:</b> ",
+          format(
+            value,
+            big.mark = ","
+          )
+          
         )
         
       )
     
     
     # ----------------------------------------------
-    # CREATE PLOT
+    # CREATE GGPLOT
     # ----------------------------------------------
     
-    ggplot(
+    p <- ggplot(
       plot_data,
       aes(
         x = date,
         y = value,
         colour = series,
-        group = series
+        group = series,
+        text = hover_text
       )
     ) +
       
@@ -404,6 +446,16 @@ server <- function(input, output, session) {
       theme(
         legend.position = "bottom"
       )
+    
+    
+    # ----------------------------------------------
+    # CONVERT TO INTERACTIVE PLOT
+    # ----------------------------------------------
+    
+    ggplotly(
+      p,
+      tooltip = "text"
+    )
     
   })
   
