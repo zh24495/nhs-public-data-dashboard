@@ -3,10 +3,47 @@ library(here)
 library(readr)
 library(fs)
 
+#Source functions
+source("scripts/helper_functions.R")
+
+#Org Level Config
+org_config <- list(
+  
+  sub_icb = list(
+    levels = c("SUB_ICB_NAME", "SUB_ICB_ODS_CODE"),
+    type = "SUB_ICB",
+    code = "SUB_ICB_ODS_CODE",
+    name = "SUB_ICB_NAME"
+  ),
+  
+  icb = list(
+    levels = c("ICB_NAME", "ICB_ODS_CODE"),
+    type = "ICB",
+    code = "ICB_ODS_CODE",
+    name = "ICB_NAME"
+  ),
+  
+  region = list(
+    levels = c("REGION_NAME", "REGION_ODS_CODE"),
+    type = "REGION",
+    code = "REGION_ODS_CODE",
+    name = "REGION_NAME"
+  ),
+  
+  country = list(
+    levels = character(0),
+    type = "COUNTRY",
+    code = NULL,
+    name = NULL
+  )
+)
 
 ##Create database files folder
 database_dir <- "data/database_files/"
 dir_create(here::here(database_dir))
+
+#Load geography data
+geography_dim <- read_csv(here("data", "gp-reg-pat-prac-map-03-2026.csv"))
 
 #Find data files for rate
 rate_files <- list.files(
@@ -15,7 +52,7 @@ rate_files <- list.files(
   full.names = TRUE
 )
 
-#Just working with one for now
+#Just working with one for now - we will add more and then loop over these.
 f <- rate_files[1]
 
 #Load files
@@ -28,9 +65,6 @@ dem_rate <- read_csv(
     date=ACH_DATE,
     measure = MEASURE,
     value=VALUE))
-
-#Load geography data
-geography_dim <- read_csv(here("data", "gp-reg-pat-prac-map-03-2026.csv"))
 
 
 #Find data for COMORBIDITIES
@@ -55,60 +89,45 @@ comor_rate <- read_csv(
   filter(measure !="DEMENTIA_REGISTER_65_PLUS")
 
 
+#combine these
 measure_fact <- bind_rows(dem_rate, comor_rate)
 
-library(dplyr)
-library(here)
-library(readr)
-library(fs)
 
-##Create database files folder
-database_dir <- "data/database_files/"
-dir_create(here::here(database_dir))
+##Adding some new measures that came in a spreadsheet with different format
+#Load file
+ass_plans <- read_csv(
+  here("data", "measures", "pcdem-prac-ass-plans-mar-2026.csv"))
 
-#Find data files for rate
-rate_files <- list.files(
-  here("data", "measures"),
-  pattern = "rate",
-  full.names = TRUE
+grouped_data <- lapply(
+  org_config,
+  function(x) {
+    group_to_level(
+      ass_plans,
+      x$levels
+    )
+  }
 )
-#Just working with one for now
-f <- rate_files[1]
-#Load files
-dem_rate <- read_csv(
-  f, 
-  col_select = c(
-    name=NAME,
-    org_code=ORG_CODE,
-    org_type=ORG_TYPE,
-    date=ACH_DATE,
-    measure = MEASURE,
-    value=VALUE))
 
-#Load geography data
-geography_dim <- read_csv(here("data", "gp-reg-pat-prac-map-03-2026.csv"))
-
-#Find data for COMORBIDITIES
-comor_files <- list.files(
-  here("data", "measures"),
-  pattern = "comor",
-  full.names = TRUE
+wide_data <- Map(
+  function(data, config) {
+    make_wide(
+      data,
+      config$type,
+      config$code,
+      config$name
+    )
+  },
+  grouped_data,
+  org_config
 )
-#Just working with one for now
-com <- comor_files[1]
-#Load files
-comor_rate <- read_csv(
-  com, 
-  col_select = c(
-    name=NAME,
-    org_code=ORG_CODE,
-    org_type=ORG_TYPE,
-    date=ACH_DATE,
-    measure = Measure,
-    value=Value)) %>%
-  filter(measure !="DEMENTIA_REGISTER_65_PLUS")
 
-measure_fact <- bind_rows(dem_rate, comor_rate)
+all_orgs <- wide_data %>%
+  lapply(\(x) janitor::clean_names(x)) %>%
+  bind_rows()
+measure_fact <- bind_rows(
+  janitor::clean_names(measure_fact),
+  all_orgs
+)
 
 # --------------------------------------------------
 # STANDARDISE org_type LABELS
@@ -156,13 +175,6 @@ saveRDS(
 )
 saveRDS(
   geography_dim,
-  here("data", "database_files", "practice_dim.rds")
+  here("data", "database_files", "geography_dim.rds")
 )
-saveRDS(
-  measure_fact,
-  here("data","database_files", "measure_fact.rds")
-)
-saveRDS(
-  geography_dim,
-  here("data", "database_files", "practice_dim.rds")
-)
+

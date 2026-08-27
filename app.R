@@ -8,7 +8,7 @@ library(colourpicker)
 # LOAD DATA
 # --------------------------------------------------
 measure_fact  <- readRDS(here::here("data", "database_files", "measure_fact.rds"))
-geography_dim <- readRDS(here::here("data" ,"database_files", "practice_dim.rds"))
+geography_dim <- readRDS(here::here("data" ,"database_files", "geography_dim.rds"))
 
 # Prepare measure data
 measure_data <- measure_fact %>%
