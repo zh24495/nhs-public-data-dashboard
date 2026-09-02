@@ -7,7 +7,7 @@ ASS_Received_GP_Mem_Ass,Received Memory Assessment,"The number of patients who h
 ASS_Received_GP_Mem_Clinic,Received Memory Clinic Referral,"The number of patients who have received an assessment for dementia and received a GP memory clinic referral since the start of the reporting year (April)."
 DIAG_Recieved_Care_Plan,Received Care Plan,"The number of patients with a diagnosis of dementia who received care plan or care plan review in the preceding 12 months."
 DIAG_Declined_Care_Plan,Declined Care Plan,"The number of patients with a diagnosis of dementia who declined a care plan or care plan review in the preceding 12 months."
-DIAG_Recieved_Med_Rev,Received Medication Review,"The number of patients with a recorded diagnosis of dementia, who had received a dementia care plan or care plan review and a medication review since the start of the reporting year (April)."
+DIAG_Received_Med_Rev,Received Medication Review,"The number of patients with a recorded diagnosis of dementia, who had received a dementia care plan or care plan review and a medication review since the start of the reporting year (April)."
 COMORBIDITIES,Comorbidities,"The number of patients who were recorded as having dementia and one or more of the following comorbidities: diabetes, stroke, hypertension and coronary heart disease."
 DELIRIUM_12M,Delirium (12 months),"The number of patients with a recorded dementia diagnosis, who had a diagnosis of delirium on or after their earliest dementia diagnosis where the diagnosis of delirium was recorded in the last 12 months."
 DEMENTIA_ESTIMATE_65_PLUS,Dementia estimate (Over 65s),"The estimated number of people living with dementia based on the Dementia 65+ estimated diagnosis rate."
