@@ -42,6 +42,33 @@
         "Built": "R 4.4.1; ; 2024-10-17 01:18:32 UTC; windows"
       }
     },
+    "DT": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Type": "Package",
+        "Package": "DT",
+        "Title": "A Wrapper of the JavaScript Library 'DataTables'",
+        "Version": "0.34.0",
+        "Authors@R": "c(\n    person(\"Yihui\", \"Xie\", role = \"aut\"),\n    person(\"Joe\", \"Cheng\", , \"joe@posit.co\", role = \"aut\"),\n    person(\"Xianying\", \"Tan\", role = \"aut\"),\n    person(\"Garrick\", \"Aden-Buie\", , \"garrick@posit.co\", role = c(\"aut\", \"cre\"),\n           comment = c(ORCID = \"0000-0002-7111-0077\")),\n    person(\"JJ\", \"Allaire\", role = \"ctb\"),\n    person(\"Maximilian\", \"Girlich\", role = \"ctb\"),\n    person(\"Greg\", \"Freedman Ellis\", role = \"ctb\"),\n    person(\"Johannes\", \"Rauh\", role = \"ctb\"),\n    person(\"SpryMedia Limited\", role = c(\"ctb\", \"cph\"),\n           comment = \"DataTables in htmlwidgets/lib\"),\n    person(\"Brian\", \"Reavis\", role = c(\"ctb\", \"cph\"),\n           comment = \"selectize.js in htmlwidgets/lib\"),\n    person(\"Leon\", \"Gersen\", role = c(\"ctb\", \"cph\"),\n           comment = \"noUiSlider in htmlwidgets/lib\"),\n    person(\"Bartek\", \"Szopka\", role = c(\"ctb\", \"cph\"),\n           comment = \"jquery.highlight.js in htmlwidgets/lib\"),\n    person(\"Alex\", \"Pickering\", role = \"ctb\"),\n    person(\"William\", \"Holmes\", role = \"ctb\"),\n    person(\"Mikko\", \"Marttila\", role = \"ctb\"),\n    person(\"Andres\", \"Quintero\", role = \"ctb\"),\n    person(\"Stéphane\", \"Laurent\", role = \"ctb\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "Data objects in R can be rendered as HTML tables using the\n    JavaScript library 'DataTables' (typically via R Markdown or Shiny).\n    The 'DataTables' library has been included in this R package. The\n    package name 'DT' is an abbreviation of 'DataTables'.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://github.com/rstudio/DT",
+        "BugReports": "https://github.com/rstudio/DT/issues",
+        "Imports": "crosstalk, htmltools (>= 0.3.6), htmlwidgets (>= 1.3),\njquerylib, jsonlite (>= 0.9.16), magrittr, promises",
+        "Suggests": "bslib, future, httpuv, knitr (>= 1.8), rmarkdown, shiny (>=\n1.6), testit, tibble",
+        "VignetteBuilder": "knitr",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.3.2",
+        "NeedsCompilation": "no",
+        "Packaged": "2025-09-02 13:12:27 UTC; garrick",
+        "Author": "Yihui Xie [aut],\n  Joe Cheng [aut],\n  Xianying Tan [aut],\n  Garrick Aden-Buie [aut, cre] (ORCID:\n    <https://orcid.org/0000-0002-7111-0077>),\n  JJ Allaire [ctb],\n  Maximilian Girlich [ctb],\n  Greg Freedman Ellis [ctb],\n  Johannes Rauh [ctb],\n  SpryMedia Limited [ctb, cph] (DataTables in htmlwidgets/lib),\n  Brian Reavis [ctb, cph] (selectize.js in htmlwidgets/lib),\n  Leon Gersen [ctb, cph] (noUiSlider in htmlwidgets/lib),\n  Bartek Szopka [ctb, cph] (jquery.highlight.js in htmlwidgets/lib),\n  Alex Pickering [ctb],\n  William Holmes [ctb],\n  Mikko Marttila [ctb],\n  Andres Quintero [ctb],\n  Stéphane Laurent [ctb],\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "Garrick Aden-Buie <garrick@posit.co>",
+        "Repository": "CRAN",
+        "Date/Publication": "2025-09-02 22:00:06 UTC",
+        "Built": "R 4.4.3; ; 2026-04-22 03:41:39 UTC; windows"
+      }
+    },
     "MASS": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",
@@ -2101,6 +2128,35 @@
         "Archs": "x64"
       }
     },
+    "paletteer": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "paletteer",
+        "Title": "Comprehensive Collection of Color Palettes",
+        "Version": "1.7.0",
+        "Authors@R": "c(\n    person(\"See AUTHORS file.\", role = \"aut\"),\n    person(\"Emil\", \"Hvitfeldt\", , \"emilhhvitfeldt@gmail.com\", role = c(\"aut\", \"cre\"))\n  )",
+        "Description": "The choices of color palettes in R can be quite overwhelming\n    with palettes spread over many packages with many different API's.\n    This packages aims to collect all color palettes across the R\n    ecosystem under the same package with a streamlined API.",
+        "License": "GPL-3",
+        "URL": "https://emilhvitfeldt.github.io/paletteer/,\nhttps://github.com/EmilHvitfeldt/paletteer",
+        "BugReports": "https://github.com/EmilHvitfeldt/paletteer/issues",
+        "Depends": "R (>= 4.1)",
+        "Imports": "cli, prismatic, rematch2, rlang (>= 1.1.0), rstudioapi",
+        "Suggests": "covr, ggplot2 (>= 3.3.0), ggthemes (>= 4.0.0), harrypotter\n(>= 2.1.0), knitr, oompaBase, palr, pals, rmarkdown, scico,\ntestthat (>= 3.0.0), vdiffr, viridisLite",
+        "Config/testthat/edition": "3",
+        "Copyright": "See LICENSE.note file.",
+        "Encoding": "UTF-8",
+        "LazyData": "true",
+        "RoxygenNote": "7.3.3",
+        "NeedsCompilation": "no",
+        "Packaged": "2026-01-07 19:39:22 UTC; emilhvitfeldt",
+        "Author": "See AUTHORS file. [aut],\n  Emil Hvitfeldt [aut, cre]",
+        "Maintainer": "Emil Hvitfeldt <emilhhvitfeldt@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2026-01-08 06:10:30 UTC",
+        "Built": "R 4.4.3; ; 2026-04-22 03:41:40 UTC; windows"
+      }
+    },
     "pillar": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",
@@ -2209,6 +2265,33 @@
         "Repository": "CRAN",
         "Date/Publication": "2023-09-24 21:10:02 UTC",
         "Built": "R 4.4.1; ; 2024-10-17 01:18:47 UTC; windows"
+      }
+    },
+    "prismatic": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "prismatic",
+        "Title": "Color Manipulation Tools",
+        "Version": "1.1.2",
+        "Authors@R": "\n    person(\"Emil\", \"Hvitfeldt\", , \"emilhhvitfeldt@gmail.com\", role = c(\"aut\", \"cre\"),\n           comment = c(ORCID = \"0000-0002-0679-1945\"))",
+        "Description": "Manipulate and visualize colors in a intuitive,\n    low-dependency and functional way.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://emilhvitfeldt.github.io/prismatic/,\nhttps://github.com/EmilHvitfeldt/prismatic",
+        "BugReports": "https://github.com/EmilHvitfeldt/prismatic/issues",
+        "Depends": "R (>= 3.2)",
+        "Imports": "graphics, farver (>= 2.0.1), grDevices",
+        "Suggests": "covr, cli, testthat (>= 3.0.0)",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.3.1",
+        "Config/testthat/edition": "3",
+        "NeedsCompilation": "no",
+        "Packaged": "2024-04-10 22:54:31 UTC; emilhvitfeldt",
+        "Author": "Emil Hvitfeldt [aut, cre] (<https://orcid.org/0000-0002-0679-1945>)",
+        "Maintainer": "Emil Hvitfeldt <emilhhvitfeldt@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-04-10 23:10:03 UTC",
+        "Built": "R 4.4.3; ; 2026-04-22 00:55:26 UTC; windows"
       }
     },
     "processx": {
@@ -3560,20 +3643,32 @@
     }
   },
   "files": {
+    ".RData": {
+      "checksum": "6aa64f6b7e9811f5bc063a8a990635b4"
+    },
     "app.R": {
-      "checksum": "cd793c23542e81b5bdab4e1e5399ceb0"
+      "checksum": "a8355b778802887ad045f38996c0415c"
     },
     "data/database_files/geography_dim.rds": {
       "checksum": "2f72712b4969e5cd6b8c9f113ba7938c"
     },
+    "data/database_files/measure_fact.csv": {
+      "checksum": "97667e5fa640aac364da359071583171"
+    },
     "data/database_files/measure_fact.rds": {
-      "checksum": "a67b59886ca8461848fc7d347ef3699e"
+      "checksum": "644a43943289891450734631a6ea8b3e"
     },
     "data/database_files/practice_dim.rds": {
       "checksum": "2f72712b4969e5cd6b8c9f113ba7938c"
     },
     "data/gp-reg-pat-prac-map-03-2026.csv": {
       "checksum": "d3eb1a16f442eac722a618287b135885"
+    },
+    "data/measure_info.csv": {
+      "checksum": "4d23f02fcbfa93e38f06fa453fa52aa2"
+    },
+    "Measure Descriptions.docx": {
+      "checksum": "47cf69e567f6edb5a76768c3cf0b3323"
     },
     "README.md": {
       "checksum": "68d3403d4c93e9473c72f667719e4f91"
