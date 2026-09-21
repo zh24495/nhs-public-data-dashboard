@@ -1,430 +1,156 @@
 library(dplyr)
-library(here)
+library(purrr)
+library(stringr)
 library(readr)
 library(fs)
+library(here)
+library(lubridate)
 
-#Source functions
-source("scripts/helper_functions.R")
+source(here("scripts", "helper_functions.R"))
 
-#Org Level Config
+# ------------------------------------------------------------------
+# CONFIG
+# ------------------------------------------------------------------
 org_config <- list(
-  
-  sub_icb = list(
-    levels = c("SUB_ICB_NAME", "SUB_ICB_ODS_CODE"),
-    type = "SUB_ICB",
-    code = "SUB_ICB_ODS_CODE",
-    name = "SUB_ICB_NAME"
-  ),
-  
-  icb = list(
-    levels = c("ICB_NAME", "ICB_ODS_CODE"),
-    type = "ICB",
-    code = "ICB_ODS_CODE",
-    name = "ICB_NAME"
-  ),
-  
-  region = list(
-    levels = c("REGION_NAME", "REGION_ODS_CODE"),
-    type = "REGION",
-    code = "REGION_ODS_CODE",
-    name = "REGION_NAME"
-  ),
-  
-  country = list(
-    levels = character(0),
-    type = "COUNTRY",
-    code = NULL,
-    name = NULL
-  )
+  sub_icb = list(levels = c("SUB_ICB_NAME", "SUB_ICB_ODS_CODE"), type = "SUB_ICB",
+                 code = "SUB_ICB_ODS_CODE", name = "SUB_ICB_NAME"),
+  icb     = list(levels = c("ICB_NAME", "ICB_ODS_CODE"), type = "ICB",
+                 code = "ICB_ODS_CODE", name = "ICB_NAME"),
+  region  = list(levels = c("REGION_NAME", "REGION_ODS_CODE"), type = "REGION",
+                 code = "REGION_ODS_CODE", name = "REGION_NAME"),
+  country = list(levels = character(0), type = "COUNTRY", code = NULL, name = NULL)
 )
 
-##Create database files folder
-database_dir <- "data/database_files/"
-dir_create(here::here(database_dir))
-
-#Load geography data
-geography_dim <- read_csv(here("data", "gp-reg-pat-prac-map-03-2026.csv"))
-
-
-##Start loading data for measures_fact (main table)
-#Find data files for rate
-rate_files <- list.files(
-  here("data", "measures"),
-  pattern = "rate",
-  full.names = TRUE
-)
-
-#Just working with one for now - we will add more and then loop over these.
-f <- rate_files[1]
-
-#Load files
-dem_rate <- read_csv(
-  f, 
-  col_select = c(
-    name=NAME,
-    org_code=ORG_CODE,
-    org_type=ORG_TYPE,
-    date=ACH_DATE,
-    measure = MEASURE,
-    value=VALUE)) %>%
-  mutate(submeasure = "")
-
-
-#Find data for COMORBIDITIES
-comor_files <- list.files(
-  here("data", "measures"),
-  pattern = "comor",
-  full.names = TRUE
-)
-
-#Just working with one for now
-com <- comor_files[1]
-#Load files
-comor_rate <- read_csv(
-  com, 
-  col_select = c(
-    name=NAME,
-    org_code=ORG_CODE,
-    org_type=ORG_TYPE,
-    date=ACH_DATE,
-    measure = Measure,
-    value=Value)) %>%
-  filter(measure !="DEMENTIA_REGISTER_65_PLUS") %>%
-  mutate(submeasure = "")
-
-
-#combine these
-measure_fact <- bind_rows(dem_rate, comor_rate)
-
-#young onset / incidence / delirium
-young_data <- read_csv(
-  here("data", "measures", "pcdem-sicbl-incidence-onset-delirium-mar-2026.csv"),
-  col_select = c(
-    name=NAME,
-    org_code=ORG_CODE,
-    org_type=ORG_TYPE,
-    date=ACH_DATE,
-    measure = Measure,
-    value=Value)) %>%
-  mutate(submeasure = "")
-
-measure_fact <- bind_rows(measure_fact, young_data)
-
-# #Cognitive impairment
-# cog_imp <- read_csv(
-#   here("data", "measures", "pcdem_sicbl-cog-imp-mar-2026.csv"),
-#   col_select = c(
-#     name = NAME,
-#     org_code = ORG_CODE,
-#     org_type = ORG_TYPE,
-#     date = ACH_DATE,
-#     measure = Measure,
-#     value = Value
-#   )
-# ) %>%
-#   mutate(
-#     value = as.numeric(na_if(value, ".")),
-#     submeasure = ""
-#   )
-# 
-# measure_fact <- bind_rows(measure_fact, cog_imp)
-
-##Adding some new measures that came in a spreadsheet with different format
-#Load file
-ass_plans <- read_csv(
-  here("data", "measures", "pcdem-prac-ass-plans-mar-2026.csv"))
-
-grouped_data <- lapply(
-  org_config,
-  function(x) {
-    group_to_level(
-      ass_plans,
-      x$levels
-    )
-  }
-)
-
-wide_data <- Map(
-  function(data, config) {
-    make_wide(
-      data,
-      config$type,
-      config$code,
-      config$name
-    )
-  },
-  grouped_data,
-  org_config
-)
-
-all_orgs <- wide_data %>%
-  lapply(\(x) janitor::clean_names(x)) %>%
-  bind_rows()%>%
-  mutate(submeasure = "")
-measure_fact <- bind_rows(
-  janitor::clean_names(measure_fact),
-  all_orgs
-)
-
-
-## Add ethnicity measures
-ethnicity <- read_csv(
-  here("data", "measures", "pcdem-sicbl-ethnicity-mar-2026.csv"))
-
-
-grouped_data <- lapply(
-  org_config,
-  function(x) {
-    group_to_level(
-      ethnicity,
-      x$levels
-    )
-  }
-)
-
-wide_data <- Map(
-  function(data, config) {
-    make_wide(
-      data,
-      config$type,
-      config$code,
-      config$name
-    )
-  },
-  grouped_data,
-  org_config
-)
-
-all_orgs <- wide_data %>%
-  lapply(\(x) janitor::clean_names(x)) %>%
-  bind_rows() %>%
-  mutate(submeasure = measure) %>%
-  mutate(measure = "ETHNICITY")
-
-
-measure_fact <- bind_rows(
-  janitor::clean_names(measure_fact),
-  janitor::clean_names(all_orgs)
-)
-
-##Add dementia type submeasures
-dem_type <- read_csv(
-  here("data", "measures", "pcdem-sicbl-dem-type-mar-2026.csv"))
-
-
-grouped_data <- lapply(
-  org_config,
-  function(x) {
-    group_to_level(
-      dem_type,
-      x$levels
-    )
-  }
-)
-
-wide_data <- Map(
-  function(data, config) {
-    make_wide(
-      data,
-      config$type,
-      config$code,
-      config$name
-    )
-  },
-  grouped_data,
-  org_config
-)
-
-all_orgs <- wide_data %>%
-  lapply(\(x) janitor::clean_names(x)) %>%
-  bind_rows() %>%
-  mutate(submeasure = measure) %>%
-  mutate(measure = "DEMENTIA_TYPE")
-
-
-measure_fact <- bind_rows(
-  janitor::clean_names(measure_fact),
-  janitor::clean_names(all_orgs)
-)
-
-## Residential Type
-res_type <- read_csv(
-  here("data", "measures", "pcdem-sicbl-res-type-mar-2026.csv"))
-
-
-grouped_data <- lapply(
-  org_config,
-  function(x) {
-    group_to_level(
-      res_type,
-      x$levels
-    )
-  }
-)
-
-wide_data <- Map(
-  function(data, config) {
-    make_wide(
-      data,
-      config$type,
-      config$code,
-      config$name
-    )
-  },
-  grouped_data,
-  org_config
-)
-
-all_orgs <- wide_data %>%
-  lapply(\(x) janitor::clean_names(x)) %>%
-  bind_rows() %>%
-  mutate(submeasure = measure) %>%
-  mutate(measure = "RES_TYPE")
-
-
-measure_fact <- bind_rows(
-  janitor::clean_names(measure_fact),
-  janitor::clean_names(all_orgs)
-)
-
-##Add age
-age_data <- read_csv(
-  here("data", "measures", "pcdem-sicbl-age-sex-mar-2026.csv")) %>%
-  filter(str_starts(Measure, "ALL_AGED_"))
-
-grouped_data <- lapply(
-  org_config,
-  function(x) {
-    group_to_level(
-      age_data,
-      x$levels
-    )
-  }
-)
-
-wide_data <- Map(
-  function(data, config) {
-    make_wide(
-      data,
-      config$type,
-      config$code,
-      config$name
-    )
-  },
-  grouped_data,
-  org_config
-)
-
-all_orgs <- wide_data %>%
-  lapply(\(x) janitor::clean_names(x)) %>%
-  bind_rows() %>%
-  mutate(submeasure = measure) %>%
-  mutate(measure = "AGE")
-
-
-measure_fact <- bind_rows(
-  janitor::clean_names(measure_fact),
-  janitor::clean_names(all_orgs)
-)
-
-##Add sex
-sex_data <- read_csv(
-  here("data", "measures", "pcdem-sicbl-age-sex-mar-2026.csv")) %>%
-  filter(str_detect(Measure, "^(FEMALE|MALE)_AGED_")) %>%
-  mutate(Measure = case_when(
-    str_starts(Measure, "FEMALE_") ~ "FEMALE",
-    str_starts(Measure, "MALE_") ~ "MALE"
-  )) %>% group_by(
-    across(-Value)
-  ) %>%
-  summarise(
-    Value=sum(Value,na.rm=TRUE),
-    .groups = "drop"
-  )
-
-grouped_data <- lapply(
-  org_config,
-  function(x) {
-    group_to_level(
-      sex_data,
-      x$levels
-    )
-  }
-)
-
-wide_data <- Map(
-  function(data, config) {
-    make_wide(
-      data,
-      config$type,
-      config$code,
-      config$name
-    )
-  },
-  grouped_data,
-  org_config
-)
-
-all_orgs <- wide_data %>%
-  lapply(\(x) janitor::clean_names(x)) %>%
-  bind_rows()  %>%
-  mutate(submeasure = measure) %>%
-  mutate(measure = "SEX")
-
-
-measure_fact <- bind_rows(
-  janitor::clean_names(measure_fact),
-  janitor::clean_names(all_orgs)
-)
-
-
-
-# --------------------------------------------------
-# STANDARDISE org_type LABELS
-# --------------------------------------------------
-# Different source files use inconsistent org_type labels
-# (e.g. "COUNTRY" vs "COUNTRY_RESPONSIBILITY"). Map every
-# known variant to a single canonical value here so new
-# measure files don't silently create a duplicate category.
-
+# Every known org_type variant -> one canonical label
 org_type_map <- c(
-  "COUNTRY"                = "COUNTRY_RESPONSIBILITY",
-  "COUNTRY_RESPONSIBILITY" = "COUNTRY_RESPONSIBILITY",
-  "ICB"                    = "ICB",
-  "NHS_REGION"             = "NHS_REGION",
-  "REGION"                 = "NHS_REGION",
-  "SUB_ICB_LOC"            = "SUB_ICB_LOC",
-  "SUB_ICB"                = "SUB_ICB_LOC"
+  COUNTRY                = "COUNTRY_RESPONSIBILITY",
+  COUNTRY_RESPONSIBILITY = "COUNTRY_RESPONSIBILITY",
+  ICB                    = "ICB",
+  NHS_REGION             = "NHS_REGION",
+  REGION                 = "NHS_REGION",
+  SUB_ICB_LOC            = "SUB_ICB_LOC",
+  SUB_ICB                = "SUB_ICB_LOC"
 )
 
-measure_fact <- measure_fact %>%
-  mutate(
-    org_type = recode(org_type, !!!org_type_map)
-  ) %>%
-  mutate(
-    name = str_trim(toupper(name))
-  )
+# Files already in long format (NAME, ORG_CODE, ORG_TYPE, ACH_DATE, MEASURE, VALUE).
+# `pattern` is matched against file names in data/measures, so every
+# year's file that matches is picked up automatically.
+standard_specs <- list(
+  list(pattern = "rate"),
+  list(pattern = "comor", drop = "DEMENTIA_REGISTER_65_PLUS"),
+  list(pattern = "incidence-onset-delirium"))
 
-# Flag anything that didn't match a known label, so unmapped
-# variants get caught here instead of silently vanishing from the app
-unmapped <- measure_fact %>%
-  filter(!org_type %in% org_type_map) %>%
-  distinct(org_type)
+# Files that need pivoting via group_to_level() / make_wide().
+#   measure = NULL  -> keep measure as is, submeasure blank
+#   measure = "X"   -> measure becomes "X", old measure moves to submeasure
+#   prep            -> optional pre-processing on the raw file
+wide_specs <- list(
+  list(pattern = "ass-plans"),
+  list(pattern = "ethnicity", measure = "ETHNICITY"),
+  list(pattern = "dem-type",  measure = "DEMENTIA_TYPE"),
+  list(pattern = "res-type",  measure = "RES_TYPE"),
+  list(pattern = "age-sex",   measure = "AGE",
+       prep = \(d) filter(d, str_starts(Measure, "ALL_AGED_"))),
+  list(pattern = "age-sex",   measure = "SEX",
+       prep = \(d) d %>%
+         filter(str_detect(Measure, "^(FEMALE|MALE)_AGED_")) %>%
+         mutate(Measure = if_else(str_starts(Measure, "FEMALE_"), "FEMALE", "MALE")) %>%
+         group_by(across(-Value)) %>%
+         summarise(Value = sum(Value, na.rm = TRUE), .groups = "drop"))
+)
 
-if (nrow(unmapped) > 0) {
-  warning(
-    "Unmapped org_type value(s) found: ",
-    paste(unmapped$org_type, collapse = ", "),
-    " — add these to org_type_map in load script."
-  )
+# ------------------------------------------------------------------
+# HELPERS
+# ------------------------------------------------------------------
+meas_dir <- here("data", "measures")
+
+find_files <- function(pattern) {
+  f <- list.files(meas_dir, pattern = paste0(pattern, ".*\\.csv$"), full.names = TRUE)
+  if (!length(f)) warning("No files found for pattern: ", pattern)
+  f
 }
 
-saveRDS(
-  measure_fact,
-  here("data","database_files", "measure_fact.rds")
-)
-saveRDS(
-  geography_dim,
-  here("data", "database_files", "geography_dim.rds")
-)
+# Fallback reporting date from a file name like "...-mar-2026.csv" -> 2026-03-31
+file_date <- function(f) {
+  m <- str_match(basename(f), "-([a-z]{3})-(\\d{4})")
+  ceiling_date(dmy(paste0("01-", m[2], "-", m[3])), "month") - days(1)
+}
 
+# Convert dates to Date whatever readr guessed (Date already, or text in
+# several possible formats). Day-first is tried before month-first.
+tidy_date <- function(x) {
+  if (inherits(x, "Date")) return(x)
+  as_date(parse_date_time(as.character(x),
+                          orders = c("ymd", "dmy", "d b y", "d B Y"),
+                          quiet = TRUE))
+}
+
+read_standard <- function(file, drop = character(0)) {
+  read_csv(file, show_col_types = FALSE) %>%
+    rename_with(tolower) %>%                      # copes with MEASURE/Measure, VALUE/Value
+    select(name, org_code, org_type, date = ach_date, measure, value) %>%
+    filter(!measure %in% drop) %>%
+    mutate(date       = tidy_date(date),
+           value      = as.numeric(na_if(as.character(value), ".")),
+           submeasure = "",
+           source_file = basename(file))
+}
+
+read_wide <- function(file, measure_label = NULL, prep = identity) {
+  raw <- read_csv(file, show_col_types = FALSE) %>% prep()
+  
+  out <- map_dfr(org_config, \(cfg) {
+    group_to_level(raw, cfg$levels) %>%
+      make_wide(cfg$type, cfg$code, cfg$name) %>%
+      janitor::clean_names()
+  })
+  
+  if (!"date" %in% names(out)) out$date <- file_date(file)
+  out$date <- tidy_date(out$date)
+  out$source_file <- basename(file)
+  
+  if (is.null(measure_label)) {
+    mutate(out, submeasure = "")
+  } else {
+    mutate(out, submeasure = measure, measure = measure_label)
+  }
+}
+
+# ------------------------------------------------------------------
+# BUILD measure_fact
+# ------------------------------------------------------------------
+standard <- map_dfr(standard_specs, \(s)
+                    map_dfr(find_files(s$pattern), read_standard, drop = s$drop %||% character(0)))
+
+wide <- map_dfr(wide_specs, \(s)
+                map_dfr(find_files(s$pattern), read_wide,
+                        measure_label = s$measure, prep = s$prep %||% identity))
+
+measure_fact <- bind_rows(standard, wide) %>%
+  mutate(org_type = recode(org_type, !!!org_type_map),
+         name     = str_trim(toupper(name))) %>%
+  # guard against the same period appearing in more than one file
+  distinct(org_type, org_code, measure, submeasure, date, .keep_all = TRUE)
+
+# ------------------------------------------------------------------
+# CHECKS
+# ------------------------------------------------------------------
+unmapped <- setdiff(unique(measure_fact$org_type), org_type_map)
+if (length(unmapped) > 0) {
+  warning("Unmapped org_type value(s): ", paste(unmapped, collapse = ", "),
+          " - add to org_type_map.")
+}
+
+if (anyNA(measure_fact$date)) {
+  bad <- measure_fact %>% filter(is.na(date)) %>% distinct(source_file)
+  warning("Unparseable dates in: ", paste(bad$source_file, collapse = ", "))
+}
+
+# ------------------------------------------------------------------
+# SAVE
+# ------------------------------------------------------------------
+geography_dim <- read_csv(here("data", "gp-reg-pat-prac-map-03-2026.csv"))
+
+out_dir <- dir_create(here("data", "database_files"))
+saveRDS(measure_fact,  path(out_dir, "measure_fact.rds"))   # drop source_file here if the app doesn't need it
+saveRDS(geography_dim, path(out_dir, "geography_dim.rds"))

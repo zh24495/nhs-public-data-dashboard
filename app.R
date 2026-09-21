@@ -63,7 +63,7 @@ geography_dim <- readRDS(
 
 measure_data <- measure_fact %>%
   mutate(
-    date = dmy(date),
+    date = as.Date(date),
     submeasure = na_if(submeasure, "")
   )
 
@@ -158,6 +158,7 @@ apply_common_filters <- function(data, input, has_submeasures) {
 format_value <- function(x) {
   scales::comma(x, accuracy = 0.1)
 }
+
 
 
 # --------------------------------------------------
@@ -365,7 +366,6 @@ server <- function(input, output, session) {
       arrange(date)
     
   })
-  
   
   # ------------------------------------------------
   # ENGLAND BENCHMARK SERIES
