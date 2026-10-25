@@ -1,0 +1,10 @@
+denominator,label,multiplier,unit_label
+PAT_LIST_ALL,Registered patients,1000,"per 1,000 registered patients"
+PAT_LIST_65_PLUS,Registered patients aged 65+,1000,"per 1,000 registered patients aged 65+"
+PAT_LIST_0_64,Registered patients aged under 65,1000,"per 1,000 registered patients aged under 65"
+PAT_LIST_40_PLUS,Registered patients aged 40+,1000,"per 1,000 registered patients aged 40+"
+DEMENTIA_REGISTER,Dementia register,100,% of dementia register
+DEMENTIA_REGISTER_65_PLUS,Dementia register aged 65+,100,% of dementia register aged 65+
+NO_PSY_DIAG,Patients with dementia and no psychosis diagnosis,100,% of patients with dementia and no psychosis diagnosis
+PSY_DIAG,Patients with dementia and a psychosis diagnosis,100,% of patients with dementia and a psychosis diagnosis
+DEMENTIA_ESTIMATE_65_PLUS,Estimated dementia population 65+,100,% of estimated dementia population 65+

@@ -1,0 +1,56 @@
+measure,label,group,basic,unit,time_type,derived_from,age_scope,ci_lower,ci_upper,description
+DEMENTIA_REGISTER,Dementia register,Diagnosis,TRUE,count,stock,"",All ages,"","",Patients with a recorded diagnosis of dementia (QOF dementia register).
+DEMENTIA_REGISTER_65_PLUS,Dementia register (65+),Diagnosis,FALSE,count,stock,"",65+,"","",Patients aged 65 and over with a recorded diagnosis of dementia.
+DEMENTIA_REGISTER_0_64,Dementia register (under 65),Diagnosis,FALSE,count,stock,"",Under 65,"","",Patients currently aged under 65 with a recorded diagnosis of dementia. Not the same as young onset.
+DEMENTIA_ESTIMATE_65_PLUS,Estimated dementia population (65+),Diagnosis,FALSE,count,stock,"",65+,"","",Expected number of people aged 65 and over with dementia (CFAS II prevalence rates).
+DIAG_RATE_65_PLUS,Diagnosis rate (65+),Diagnosis,TRUE,percent,stock,"",65+,DIAG_RATE_65_PLUS_LL,DIAG_RATE_65_PLUS_UL,Recorded dementia register (65+) as a percentage of the estimated dementia population (65+).
+DIAG_RATE_65_PLUS_LL,Diagnosis rate (65+) lower 95% limit,Hidden,FALSE,percent,stock,"",65+,"","",Lower 95% confidence limit of the diagnosis rate.
+DIAG_RATE_65_PLUS_UL,Diagnosis rate (65+) upper 95% limit,Hidden,FALSE,percent,stock,"",65+,"","",Upper 95% confidence limit of the diagnosis rate.
+YOUNG_ONSET,Young onset dementia,Diagnosis,FALSE,count,stock,"",All ages,"","",Patients whose dementia diagnosis was recorded before the age of 65 (any current age). Called early onset before Nov 2023.
+INCIDENCE,New diagnoses (incidence),Diagnosis,TRUE,count,flow,"",All ages,"","",Patients newly diagnosed with dementia in the period. A monthly count until Mar 2026 and a quarterly count from Jun 2026 (not comparable).
+MCI,Mild cognitive impairment (40+),Diagnosis,FALSE,count,stock,"",40+,"","",Patients aged 40 and over with a diagnosis of mild cognitive impairment (it is only counted from age 40). From Apr 2024.
+MCI_65_PLUS,Mild cognitive impairment (65+),Diagnosis,FALSE,count,stock,"",65+,"","",Patients aged 65 and over with a diagnosis of mild cognitive impairment. From Apr 2023.
+MCI_0_64,Mild cognitive impairment (40-64),Diagnosis,FALSE,count,stock,"",40-64,"","",Patients aged 40 to 64 with a diagnosis of mild cognitive impairment. From mid 2024.
+MCI_BY_AGE,Mild cognitive impairment by age,Diagnosis,FALSE,count,stock,"",40+,"","",Patients with mild cognitive impairment by age band (from age 40). From mid 2024.
+MCI_BY_SEX,Mild cognitive impairment by sex,Diagnosis,FALSE,count,stock,"",40+,"","",Patients aged 40 and over with mild cognitive impairment by sex. From mid 2024.
+DEMENTIA_REGISTER_BY_AGE,Dementia register by age,Demographics,FALSE,count,stock,"",All ages,"","",Dementia register by age band. Monthly releases cover 65+ bands only; quarterly releases cover all ages.
+DEMENTIA_REGISTER_65_PLUS_BY_SEX,Dementia register (65+) by sex,Demographics,TRUE,count,stock,"",65+,"","",Dementia register aged 65 and over by sex.
+DEMENTIA_REGISTER_BY_SEX,Dementia register by sex,Demographics,FALSE,count,stock,"",All ages,"","",Dementia register (all ages) by sex. From Jun 2026 (earlier releases give 65+ only).
+ETHNICITY,Dementia register by ethnicity,Demographics,TRUE,count,stock,"",All ages,"","",Dementia register by latest recorded ethnic group.
+DEMENTIA_TYPE,Dementia register by dementia type,Demographics,TRUE,count,stock,"",All ages,"","",Dementia register by most recent dementia type. Other specified / not recorded categories from Apr 2025.
+RESIDENCE_TYPE,Dementia register by residence type,Demographics,TRUE,count,stock,"",All ages,"","",Dementia register by most recent residence type.
+PAT_LIST_ALL,Registered patients,Population,FALSE,count,stock,"",All ages,"","",Patients registered at GP practices.
+PAT_LIST_65_PLUS,Registered patients (65+),Population,FALSE,count,stock,"",65+,"","",Registered patients aged 65 and over.
+PAT_LIST_0_64,Registered patients (under 65),Population,FALSE,count,stock,"",Under 65,"","",Registered patients aged under 65.
+PAT_LIST_40_PLUS,Registered patients (40+),Population,FALSE,count,stock,"",40+,"","",Registered patients aged 40 and over (the population for mild cognitive impairment).
+COMORBIDITIES,Comorbidities,Care,FALSE,count,stock,"",65+ (assumed),"","","Patients with dementia and one or more of diabetes, stroke, hypertension or coronary heart disease. Monthly releases only."
+PALLIATIVE_CARE,Palliative care,Care,FALSE,count,stock,"",65+,"","",Patients aged 65 and over with dementia who are on the QOF palliative care register.
+DELIRIUM_12M,Delirium (last 12 months),Care,FALSE,count,rolling12,"",All ages,"","",Patients with dementia and a diagnosis of delirium recorded in the last 12 months.
+DIAG_RECEIVED_CARE_PLAN,Received care plan (last 12 months),Care,FALSE,count,rolling12,"",All ages,"","",Patients with dementia who received a care plan or care plan review in the last 12 months.
+DIAG_DECLINED_CARE_PLAN,Declined care plan (last 12 months),Care,FALSE,count,rolling12,"",All ages,"","",Patients with dementia who declined a care plan or care plan review in the last 12 months.
+DIAG_RECEIVED_MED_REV,Medication reviews,Care,FALSE,count,flow,DIAG_RECEIVED_MED_REV_YTD,All ages,"","",Medication reviews in the period (derived from the financial-year-to-date count). Suppressed at many practices before 2026/27.
+DIAG_RECEIVED_MED_REV_YTD,Medication reviews (financial year to date),Care,FALSE,count,fytd,"",All ages,"","",Patients with a care plan review who received a medication review since 1 April. Suppressed at many practices before 2026/27.
+ASS_RECEIVED_GP,GP dementia assessments,Assessment,FALSE,count,flow,ASS_RECEIVED_GP_YTD,All ages,"","",Patients who received a GP assessment for dementia in the period. Monthly releases only.
+ASS_RECEIVED_GP_YTD,GP dementia assessments (financial year to date),Assessment,FALSE,count,fytd,"",All ages,"","",Patients who received a GP assessment for dementia since 1 April. Monthly releases only.
+ASS_RECEIVED_GP_MEM_ASS,Received memory assessment,Assessment,FALSE,count,flow,ASS_RECEIVED_GP_MEM_ASS_YTD,All ages,"","",Patients assessed who received a GP memory assessment in the period. Monthly releases only.
+ASS_RECEIVED_GP_MEM_ASS_YTD,Received memory assessment (financial year to date),Assessment,FALSE,count,fytd,"",All ages,"","",Patients assessed who received a GP memory assessment since 1 April. Monthly releases only.
+ASS_DECLINED_GP_MEM_ASS,Declined memory assessment,Assessment,FALSE,count,flow,ASS_DECLINED_GP_MEM_ASS_YTD,All ages,"","",Patients assessed who declined a GP memory assessment in the period. Monthly releases only.
+ASS_DECLINED_GP_MEM_ASS_YTD,Declined memory assessment (financial year to date),Assessment,FALSE,count,fytd,"",All ages,"","",Patients assessed who declined a GP memory assessment since 1 April. Monthly releases only.
+ASS_RECEIVED_GP_MEM_CLINIC,Received memory clinic referral,Assessment,FALSE,count,flow,ASS_RECEIVED_GP_MEM_CLINIC_YTD,All ages,"","",Patients assessed who received a memory clinic referral in the period. Monthly releases only.
+ASS_RECEIVED_GP_MEM_CLINIC_YTD,Received memory clinic referral (financial year to date),Assessment,FALSE,count,fytd,"",All ages,"","",Patients assessed who received a memory clinic referral since 1 April. Monthly releases only.
+ASS_DECLINED_GP_MEM_CLINIC,Declined memory clinic referral,Assessment,FALSE,count,flow,ASS_DECLINED_GP_MEM_CLINIC_YTD,All ages,"","",Patients assessed who declined a memory clinic referral in the period. Monthly releases only.
+ASS_DECLINED_GP_MEM_CLINIC_YTD,Declined memory clinic referral (financial year to date),Assessment,FALSE,count,fytd,"",All ages,"","",Patients assessed who declined a memory clinic referral since 1 April. Monthly releases only.
+NUM_PAT_REF_MEM_CLIN_12M,Memory clinic referrals: patients (last 12 months),Assessment,FALSE,count,rolling12,"",All ages,"","","Number of patients referred to a memory clinic in the last 12 months. Each patient counts once, however many times they were referred. From 2026/27."
+NUM_REF_MEM_CLIN_12M,Memory clinic referrals: total referrals (last 12 months),Assessment,FALSE,count,rolling12,"",All ages,"","","Number of referrals to a memory clinic in the last 12 months. A patient referred twice counts twice, so this is always at least the number of patients referred. From 2026/27."
+DEM_FALL_12M,Falls (last 12 months),Frailty,FALSE,count,rolling12,"",All ages,"","",Patients with dementia who had a fall in the last 12 months. From 2026/27.
+DEM_FRAC_NOF_12M,Hip fracture (last 12 months),Frailty,FALSE,count,rolling12,"",All ages,"","",Patients with dementia who had a fractured neck of femur in the last 12 months. From 2026/27.
+DEM_MILD_FRAILTY,Mild frailty,Frailty,FALSE,count,stock,"",All ages,"","",Patients with dementia and a diagnosis of mild frailty. From 2026/27.
+DEM_MOD_FRAILTY,Moderate frailty,Frailty,FALSE,count,stock,"",All ages,"","",Patients with dementia and a diagnosis of moderate frailty. From 2026/27.
+DEM_SEV_FRAILTY,Severe frailty,Frailty,FALSE,count,stock,"",All ages,"","",Patients with dementia and a diagnosis of severe frailty. From 2026/27.
+DON_RIV_GAL_12M,"Donepezil, rivastigmine or galantamine (last 12 months)",Prescribing,FALSE,count,rolling12,"",All ages,"","","Patients with dementia prescribed donepezil, rivastigmine or galantamine in the last 12 months. From 2026/27."
+MEM_12M,Memantine (last 12 months),Prescribing,FALSE,count,rolling12,"",All ages,"","",Patients with dementia prescribed memantine in the last 12 months. From 2026/27.
+MEM_PLUS_DON_RIV_GAL_12M,Memantine in combination (last 12 months),Prescribing,FALSE,count,rolling12,"",All ages,"","","Patients with dementia prescribed memantine with donepezil, rivastigmine or galantamine in the last 12 months. From 2026/27."
+NO_PSY_DIAG,No psychosis diagnosis,Prescribing,FALSE,count,stock,"",All ages,"","",Patients on the dementia register without a recorded diagnosis of psychosis. From Jun 2026 (earlier monthly figures were mostly suppressed and are not shown).
+NO_PSY_DIAG_WITH_ANTIPSYMEDS,Antipsychotics without psychosis diagnosis,Prescribing,FALSE,count,stock,"",All ages,"","",Patients without a psychosis diagnosis prescribed antipsychotics in the six weeks to the period end. From Jun 2026 (earlier monthly figures were mostly suppressed and are not shown).
+PSY_DIAG,Psychosis diagnosis,Prescribing,FALSE,count,stock,"",All ages,"","",Patients on the dementia register with a recorded diagnosis of psychosis. From Jun 2026 (earlier monthly figures were mostly suppressed and are not shown).
+PSY_DIAG_WITH_ANTIPSYMEDS,Antipsychotics with psychosis diagnosis,Prescribing,FALSE,count,stock,"",All ages,"","",Patients with a psychosis diagnosis prescribed antipsychotics in the six weeks to the period end. From Jun 2026 (earlier monthly figures were mostly suppressed and are not shown).
