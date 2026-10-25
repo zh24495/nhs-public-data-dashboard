@@ -1,0 +1,7 @@
+period_end,measure,org_code,type,label,description
+30/04/2022,,,break,PCDD starts,"Primary Care Dementia Data replaces the Recorded Dementia Diagnoses series. First published for October 2022, with figures back to April 2022. Figures before and after are not directly comparable."
+30/06/2026,,,frequency,Quarterly from Jun 2026,Publication moved from monthly to quarterly with a new 2026/27 specification. Missing practice data is no longer carried forward from earlier months. Monthly views stop at March 2026; use the Quarter view to see later data.
+30/06/2026,INCIDENCE,,break,Incidence now quarterly,Incidence counts new diagnoses over a quarter instead of a month. NHS England says it is likely to be higher from June 2026 and is not comparable with earlier data.
+30/04/2025,DEMENTIA_TYPE,,break,New dementia type categories,Other specified and not recorded dementia type categories added.
+30/11/2023,YOUNG_ONSET,,note,Renamed young onset,Early onset dementia renamed young onset dementia (same measure).
+30/04/2023,,Y56,note,London coverage increase,"London's registered patients rise from 8.9m to 10.6m between March and April 2023 in the published data (and its dementia register by about 8,000)."
