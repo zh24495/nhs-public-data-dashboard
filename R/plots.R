@@ -108,8 +108,16 @@ panel_plot <- function(pd, unit, breaks, view, x_range, show_ci = FALSE) {
     line = list(color = INK[["muted"]], width = 1, dash = if (markers$type[i] == "note") "dot" else "dash")))
   # Labels in the right third of the chart sit to the left of their line so they aren't clipped
   on_right <- function(x) as.numeric(x - x_range[1]) > 0.66 * as.numeric(diff(x_range))
+  # Labels close together (within a sixth of the axis, e.g. Oct 2022 and Apr
+  # 2023) go on separate rows so they don't overlap
+  label_row <- integer(nrow(markers))
+  for (i in seq_len(nrow(markers))[-1]) {
+    earlier <- seq_len(i - 1)
+    near <- abs(as.numeric(marker_x[i] - marker_x[earlier])) < as.numeric(diff(x_range)) / 6
+    if (any(near)) label_row[i] <- max(label_row[earlier][near]) + 1L
+  }
   labels <- lapply(seq_len(nrow(markers)), function(i) list(
-    x = marker_x[i], y = 1, xref = "x", yref = "paper",
+    x = marker_x[i], y = 1 - 0.07 * label_row[i], xref = "x", yref = "paper",
     text = markers$label[i], hovertext = markers$description[i], showarrow = FALSE,
     xanchor = if (on_right(marker_x[i])) "right" else "left", xshift = if (on_right(marker_x[i])) -4 else 4,
     yanchor = "top", font = list(size = 11, color = INK[["secondary"]])))

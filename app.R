@@ -1,4 +1,4 @@
-# Primary Care Dementia Data explorer
+# Dementia data explorer: Recorded Dementia Diagnoses and Primary Care Dementia Data
 #
 # Shows NHS England dementia statistics for England and the 7 NHS regions.
 # Reads data/dementia_tidy.csv (built by pipeline/run_pipeline.R) and the
@@ -274,9 +274,12 @@ css <- "
 about_ui <- function() {
   div(class = "about",
     p("Data: NHS England, ",
+      a("Recorded Dementia Diagnoses", target = "_blank",
+        href = "https://digital.nhs.uk/data-and-information/publications/statistical/recorded-dementia-diagnoses"),
+      " (April 2016 to September 2022) and ",
       a("Primary Care Dementia Data", target = "_blank",
         href = "https://digital.nhs.uk/data-and-information/publications/statistical/primary-care-dementia-data"),
-      ". Monthly releases to March 2026, quarterly from June 2026. Each month or quarter is taken from the latest release that includes it."),
+      " (from October 2022). Monthly releases to March 2026, quarterly from June 2026. Each month or quarter is taken from the latest release that includes it. Regions are shown from March 2019, when the current 7 began."),
     h5("What each point means"),
     tags$ul(
       tags$li(tags$b("Point in time: "), "a count on the last day of the period (e.g. the dementia register). Quarters and financial years show the value at the end of the period."),
@@ -328,7 +331,7 @@ sidebar_controls <- sidebar(
 
 ui <- page_sidebar(
   title = div(div(class = "app-title", "Dementia in primary care"),
-              div(class = "app-subtitle", "NHS England Primary Care Dementia Data · England and NHS regions")),
+              div(class = "app-subtitle", "NHS England Recorded Dementia Diagnoses (to Sep 2022) and Primary Care Dementia Data · England and NHS regions")),
   theme = theme,
   tags$head(tags$style(HTML(css))),
   sidebar = sidebar_controls,

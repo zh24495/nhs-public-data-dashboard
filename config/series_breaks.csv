@@ -1,5 +1,6 @@
 period_end,measure,org_code,type,label,description
-30/04/2022,,,break,PCDD starts,"Primary Care Dementia Data replaces the Recorded Dementia Diagnoses series. First published for October 2022, with figures back to April 2022. Figures before and after are not directly comparable."
+31/10/2022,,,break,PCDD starts,"Primary Care Dementia Data (PCDD) replaces Recorded Dementia Diagnoses (RDD), which is shown up to September 2022. PCDD's coverage of practices was still building until about April 2023, so its counts start around 5% lower than RDD's (England register: 451,992 in Sep 2022 in RDD, 427,176 in Oct 2022 in PCDD). Rates are much less affected. Ethnicity has 8 groups in PCDD against 6 in RDD."
+31/03/2019,,,note,Regions from Mar 2019,"The current 7 NHS regions start in March 2019. Before that NHS England had 4 (then 5) different regions, so only England is shown."
 30/06/2026,,,frequency,Quarterly from Jun 2026,Publication moved from monthly to quarterly with a new 2026/27 specification. Missing practice data is no longer carried forward from earlier months. Monthly views stop at March 2026; use the Quarter view to see later data.
 30/06/2026,INCIDENCE,,break,Incidence now quarterly,Incidence counts new diagnoses over a quarter instead of a month. NHS England says it is likely to be higher from June 2026 and is not comparable with earlier data.
 30/04/2025,DEMENTIA_TYPE,,break,New dementia type categories,Other specified and not recorded dementia type categories added.
